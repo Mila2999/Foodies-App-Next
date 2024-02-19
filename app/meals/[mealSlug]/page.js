@@ -1,22 +1,29 @@
+import { getMeal } from '@/lip/meals';
 import Image from 'next/image';
 import classes from './page.module.css';
-export default function MealDetailsPage() {
+export default function MealDetailsPage({ params }) {
+  const meal = getMeal(params.mealSlug);
+
+  meal.instructions = meal.instructions.replace(/\n/g, '<br />');
   return (
     <>
       <header className={classes.header}>
         <div className={classes.image}>
-          <Image fill />
+          <Image src={meal.image} alt={meal.title} fill />
         </div>
         <div className={classes.headerText}>
-          <h1>TITLE</h1>
+          <h1>{meal.title}</h1>
           <p className={classes.creator}>
-            by <a href={`mailto: ${'EMAIL'}`}>NAME</a>
+            by <a href={`mailto: ${meal.creator._email}`}>{meal.creator}</a>
           </p>
-          <p className={classes.summary}>SUMMARY</p>
+          <p className={classes.summary}>{meal.summary}</p>
         </div>
       </header>
       <main>
-        <p className={classes.instructions} dangerouslySetInnerHTML={{ __html: '...' }}></p>
+        <p
+          className={classes.instructions}
+          dangerouslySetInnerHTML={{ __html: meal.instructions }}
+        ></p>
       </main>
     </>
   );
